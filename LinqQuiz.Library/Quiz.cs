@@ -16,7 +16,19 @@ namespace LinqQuiz.Library
         /// </exception>
         public static int[] GetEvenNumbers(int exclusiveUpperLimit)
         {
-            throw new NotImplementedException();
+            if (exclusiveUpperLimit < 1)
+            {
+                throw new ArgumentOutOfRangeException();
+            }       
+            var numbers = new List<int>();
+
+            for (int i = 1; i < exclusiveUpperLimit; i++)
+            {
+                numbers.Add(i);
+            }
+            var evenNumbers = numbers.Where(number => number % 2 == 0);
+            
+            return evenNumbers.ToArray();
         }
 
         /// <summary>
@@ -33,7 +45,26 @@ namespace LinqQuiz.Library
         /// </remarks>
         public static int[] GetSquares(int exclusiveUpperLimit)
         {
-            throw new NotImplementedException();
+            int[] result = new int[0];
+
+            if(exclusiveUpperLimit < 1)
+                return result;
+
+            var numbers = new List<int>();
+            checked
+            {
+                for (int i = 1; i < exclusiveUpperLimit; i++)
+                {
+                    numbers.Add(i);
+                }
+
+                var SquareNumbers = numbers.Where(number => number % 7 == 0)
+                                           .Select(number => number * number)
+                                           .OrderByDescending(number => number);
+
+                return SquareNumbers.ToArray();
+            }
+            
         }
 
         /// <summary>
@@ -52,7 +83,15 @@ namespace LinqQuiz.Library
         /// </remarks>
         public static FamilySummary[] GetFamilyStatistic(IReadOnlyCollection<IFamily> families)
         {
-            throw new NotImplementedException();
+            if (families == null)
+            {
+                throw new ArgumentNullException();
+            }
+            var familiySummary = new FamilySummary[families.Count(n => n.Persons != null)];
+
+            familiySummary = families.Select(x => new FamilySummary() { FamilyID = x.ID, AverageAge = x.Persons.Count > 0 ? x.Persons.Average(x => x.Age) : 0, NumberOfFamilyMembers = x.Persons.Count }).ToArray();
+            
+            return familiySummary;
         }
 
         /// <summary>

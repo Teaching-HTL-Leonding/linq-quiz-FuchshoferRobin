@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 
 namespace LinqQuiz.Library
 {
@@ -88,9 +89,7 @@ namespace LinqQuiz.Library
                 throw new ArgumentNullException();
             }
             var familiySummary = new FamilySummary[families.Count(n => n.Persons != null)];
-
             familiySummary = families.Select(x => new FamilySummary() { FamilyID = x.ID, AverageAge = x.Persons.Count > 0 ? x.Persons.Average(x => x.Age) : 0, NumberOfFamilyMembers = x.Persons.Count }).ToArray();
-            
             return familiySummary;
         }
 
@@ -109,7 +108,7 @@ namespace LinqQuiz.Library
         /// </remarks>
         public static (char letter, int numberOfOccurrences)[] GetLetterStatistic(string text)
         {
-            throw new NotImplementedException();
+           return text.Where(x => char.IsLetter(x)).GroupBy(x => x).Select(x => (letter: x.Key, numberOfOcc: x.Count())).ToArray();
         }
     }
 }
